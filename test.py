@@ -33,7 +33,7 @@ while True:
     detected_objects = cascade_classifier.detectMultiScale(frame, minSize=(28, 28))
 
 
-    if len(detected_objects) != 0:
+    if len(detected_objects) == 1:
         for key, (x, y, width, height) in enumerate(detected_objects):
             cv2.rectangle(frame, (x, y),
                 (x + height, y + width),
@@ -54,25 +54,45 @@ while True:
         
 
         if len(detected_eyes) == 2:
-            print(len(detected_eyes))
+            def check(arr):
+                y0 = arr[0][1]
+                y1 = arr[0][1] + arr[0][3]
+                if arr[0][0] < arr[1][0]:
+                    x0 = arr[0][0]
+                    x1 = arr[1][0] + arr[1][2]
+                if arr[1][0] < arr[0][0]:
+                    x0 = arr[1][0]
+                    x1 = arr[0][0] + arr[0][2]
+                
+                return ((x0, y0), (x1, y1))
+            
+            points = check(detected_eyes)
+            cv2.rectangle(
+                    crop_img,
+                    (points[0][0], points[0][1]),
+                    (points[1][0], points[1][1]),
+                    (0, 255, 0),
+                    2
+                )
+            # print(len(detected_eyes))
 
-            plus_x = 25
-            plus_y = 25
+            # plus_x = 25
+            # plus_y = 25
 
-            x_1 = detected_eyes[0][0] - plus_x
-            y_1 = detected_eyes[0][1] - plus_y
-            width_1 = detected_eyes[0][2]
-            height_1 = detected_eyes[0][3]
+            # x_1 = detected_eyes[0][0] - plus_x
+            # y_1 = detected_eyes[0][1] - plus_y
+            # width_1 = detected_eyes[0][2]
+            # height_1 = detected_eyes[0][3]
 
-            x_2 = detected_eyes[1][0]
-            y_2 = detected_eyes[1][1]
-            width_2 = detected_eyes[1][2]
-            height_2 = detected_eyes[1][3]
+            # x_2 = detected_eyes[1][0]
+            # y_2 = detected_eyes[1][1]
+            # width_2 = detected_eyes[1][2]
+            # height_2 = detected_eyes[1][3]
 
-            isSwaped = x_1 > x_2
+            # isSwaped = x_1 > x_2
 
-            x_total = width_2 + x_2
-            y_total = y_1 + height_1
+            # x_total = width_2 + x_2
+            # y_total = y_1 + height_1
 
 
             # print(detected_eyes[0][0], "=====")
@@ -89,22 +109,22 @@ while True:
             #             # y_total = y_total + y
             #             # width_total = width_total + width
             #             # height_total = height_total + height
-            if isSwaped:
-                cv2.rectangle(
-                    crop_img,
-                    (x_2, y_2),
-                    (x_total - plus_x, y_total - plus_y),
-                    (0, 255, 0),
-                    2
-                )
-            else:
-                cv2.rectangle(
-                    crop_img,
-                    (x_1, y_1),
-                    (x_total + plus_x, y_total + plus_y),
-                    (0, 255, 0),
-                    2
-                )
+            # if isSwaped:
+            #     cv2.rectangle(
+            #         crop_img,
+            #         (x_2, y_2),
+            #         (x_total - plus_x, y_total - plus_y),
+            #         (0, 255, 0),
+            #         2
+            #     )
+            # else:
+            #     cv2.rectangle(
+            #         crop_img,
+            #         (x_1, y_1),
+            #         (x_total + plus_x, y_total + plus_y),
+            #         (0, 255, 0),
+            #         2
+            #     )
 
         # detected_mouth = cascade_classifier3.detectMultiScale(crop_img, minSize=(28, 28))
         # if len(detected_mouth) != 0:
